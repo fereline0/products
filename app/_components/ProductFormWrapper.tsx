@@ -1,15 +1,14 @@
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { TProduct } from "../_types/product";
 import ProductForm from "./shared/ProductForm";
+import { useProductStore } from "../_stores/productStore";
 
 type TProductFormWrapperProps = {
-  setProducts: Dispatch<SetStateAction<TProduct[]>>;
   product?: TProduct | null;
   onSuccess?: () => void;
 };
 
 export default function ProductFormWrapper({
-  setProducts,
   product,
   onSuccess,
 }: TProductFormWrapperProps) {
@@ -17,41 +16,30 @@ export default function ProductFormWrapper({
   const [description, setDescription] = useState(product?.description || "");
   const [price, setPrice] = useState(product?.price || 0);
 
+  const { addProduct, updateProduct } = useProductStore();
+
   useEffect(() => {
-    if (product) {
-      setName(product.name);
-      product.description && setDescription(product.description);
-      setPrice(product.price);
-    }
+    setName(product?.name || "");
+    setDescription(product?.description || "");
+    setPrice(product?.price || 0);
   }, [product]);
 
-  const createProduct = (): TProduct => ({
-    id: Date.now(),
-    name,
-    description,
-    price,
-    createdAt: new Date(),
-  });
-
-  const updateProduct = (): TProduct => {
-    if (!product) throw new Error("No product to update");
-
-    return {
-      ...product,
-      name,
-      description,
-      price,
-    };
-  };
-
-  const onSubmit = () => {
-    const newProduct = product ? updateProduct() : createProduct();
-
-    setProducts((prev) =>
-      product
-        ? prev.map((p) => (p.id === product.id ? newProduct : p))
-        : [newProduct, ...prev],
-    );
+  const handleSubmit = () => {
+    if (product) {
+      updateProduct(product.id, {
+        name,
+        description,
+        price,
+      });
+    } else {
+      addProduct({
+        id: Date.now(),
+        name,
+        description,
+        price,
+        createdAt: new Date(),
+      });
+    }
 
     onSuccess?.();
   };
@@ -64,7 +52,7 @@ export default function ProductFormWrapper({
       setDescription={setDescription}
       price={price}
       setPrice={setPrice}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
       submitButtonProps={
         product
           ? {

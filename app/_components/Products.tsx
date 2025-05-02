@@ -1,8 +1,6 @@
-"use client";
-
 import { Card, CardBody } from "@heroui/card";
 import { TProduct } from "../_types/product";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ProductFormWrapper from "./ProductFormWrapper";
 import { Button } from "@heroui/button";
 import { useDisclosure } from "@heroui/modal";
@@ -13,27 +11,12 @@ import {
   DrawerBody,
 } from "@heroui/drawer";
 import ProductWrapper from "./ProductWrapper";
+import { useProductStore } from "../_stores/productStore";
 
-type TProductsProps = {
-  products: TProduct[];
-};
-
-export default function Products({ products }: TProductsProps) {
+export default function Products() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  const [productsCopy, setProductsCopy] = useState(products);
+  const products = useProductStore((state) => state.products);
   const [selectedProduct, setSelectedProduct] = useState<TProduct | null>(null);
-
-  useEffect(() => {
-    setProductsCopy(products);
-  }, [products]);
-
-  const handleDelete = (id: number) => {
-    setProductsCopy((prev) => prev.filter((product) => product.id !== id));
-    if (selectedProduct?.id === id) {
-      setSelectedProduct(null);
-    }
-  };
 
   return (
     <div className="flex justify-between flex-col-reverse md:flex-row gap-4">
@@ -50,22 +33,18 @@ export default function Products({ products }: TProductsProps) {
                     Add product
                   </DrawerHeader>
                   <DrawerBody>
-                    <ProductFormWrapper
-                      setProducts={setProductsCopy}
-                      onSuccess={close}
-                    />
+                    <ProductFormWrapper onSuccess={close} />
                   </DrawerBody>
                 </>
               )}
             </DrawerContent>
           </Drawer>
         </div>
-        {productsCopy.map((product) => (
+        {products.map((product) => (
           <ProductWrapper
             key={product.id}
             product={product}
             onPress={() => setSelectedProduct(product)}
-            onDelete={() => handleDelete(product.id)}
           />
         ))}
       </div>
@@ -74,7 +53,6 @@ export default function Products({ products }: TProductsProps) {
           <CardBody>
             {selectedProduct ? (
               <ProductFormWrapper
-                setProducts={setProductsCopy}
                 product={selectedProduct}
                 onSuccess={() => setSelectedProduct(null)}
               />

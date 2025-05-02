@@ -2,18 +2,19 @@ import { PressEvent } from "@heroui/button";
 import { TProduct } from "../_types/product";
 import Product from "./shared/Product";
 import ProductActions from "./ProductActions";
+import { useProductStore } from "../_stores/productStore";
 
 type TProductWrapperProps = {
   product: TProduct;
   onPress: (e: PressEvent) => void;
-  onDelete: (e: PressEvent) => void;
 };
 
 export default function ProductWrapper({
   product,
   onPress,
-  onDelete,
 }: TProductWrapperProps) {
+  const deleteProduct = useProductStore((state) => state.deleteProduct);
+
   return (
     <Product
       fullWidth
@@ -23,7 +24,7 @@ export default function ProductWrapper({
       createdAt={product.createdAt.toDateString()}
       isPressable
       onPress={onPress}
-      endContent={<ProductActions onDelete={onDelete} />}
+      endContent={<ProductActions onDelete={() => deleteProduct(product.id)} />}
     />
   );
 }

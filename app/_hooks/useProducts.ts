@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { TProduct } from "../_types/product";
-import { fetchProducts } from "../_services/product";
+import { fetchProducts } from "../_services/productService";
 
 export default function useProducts() {
   const [products, setProducts] = useState<TProduct[]>([]);

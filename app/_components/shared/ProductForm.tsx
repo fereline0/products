@@ -33,12 +33,7 @@ export default function ProductForm({
 
   return (
     <Form>
-      <Input
-        label="Product name"
-        value={name}
-        onValueChange={setName}
-        required
-      />
+      <Input label="Name" value={name} onValueChange={setName} required />
       <Textarea
         label="Description"
         value={description}

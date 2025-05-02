@@ -6,8 +6,6 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/app/_config/site";
 import { fontSans } from "@/app/_config/fonts";
-import { Suspense } from "react";
-import Loading from "./_components/shared/Loading";
 
 export const metadata: Metadata = {
   title: {
@@ -42,9 +40,7 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <Suspense fallback={<Loading />}>
-            <main className="container mx-auto max-w-7xl p-4">{children}</main>
-          </Suspense>
+          <main className="container mx-auto max-w-7xl p-4">{children}</main>
         </Providers>
       </body>
     </html>

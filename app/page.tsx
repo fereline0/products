@@ -1,8 +1,22 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Products from "./_components/Products";
-import { fetchProducts } from "./_services/product";
+import { useProductStore } from "./_stores/productStore";
+import Loading from "./_components/shared/Loading";
 
-export default async function ProductsPage() {
-  const products = await fetchProducts();
+export default function ProductsPage() {
+  const fetchProducts = useProductStore((state) => state.fetchProducts);
+  const isLoading = useProductStore((state) => state.isLoading);
+  const [initialLoad, setInitialLoad] = useState(true);
 
-  return <Products products={products} />;
+  useEffect(() => {
+    if (initialLoad) {
+      fetchProducts().finally(() => setInitialLoad(false));
+    }
+  }, [fetchProducts, initialLoad]);
+
+  if (initialLoad || isLoading) return <Loading />;
+
+  return <Products />;
 }
