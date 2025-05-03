@@ -50,7 +50,9 @@ export default function Products() {
           <ProductWrapper
             key={product.id}
             product={product}
-            onPress={() => setSelectedProduct(selectedProduct ? null : product)}
+            onPress={() =>
+              setSelectedProduct(selectedProduct == product ? null : product)
+            }
           />
         ))}
       </div>
