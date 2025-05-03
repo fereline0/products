@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { TProduct } from "../_types/product";
 import ProductForm from "./shared/ProductForm";
 import { useProductStore } from "../_stores/productStore";
+import TProduct from "../_types/product";
 
 type TProductFormWrapperProps = {
   product?: TProduct | null;

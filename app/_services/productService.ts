@@ -1,5 +1,5 @@
 import { generateMockProducts } from "@/app/_utils/mockProducts";
-import { TProduct } from "@/app/_types/product";
+import TProduct from "../_types/product";
 
 export async function fetchProducts(
   count = 100,

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { TProduct } from "../_types/product";
+import TProduct from "../_types/product";
 
 export const generateMockProducts = (count: number): TProduct[] => {
   return Array.from({ length: count }, (_, index) => {

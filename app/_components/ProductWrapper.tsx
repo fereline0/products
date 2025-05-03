@@ -1,8 +1,8 @@
 import { PressEvent } from "@heroui/button";
-import { TProduct } from "../_types/product";
 import Product from "./shared/Product";
 import ProductActions from "./ProductActions";
 import { useProductStore } from "../_stores/productStore";
+import TProduct from "../_types/product";
 
 type TProductWrapperProps = {
   product: TProduct;

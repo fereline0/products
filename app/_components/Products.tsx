@@ -1,5 +1,4 @@
 import { Card, CardBody } from "@heroui/card";
-import { TProduct } from "../_types/product";
 import { useState } from "react";
 import ProductFormWrapper from "./ProductFormWrapper";
 import { Button } from "@heroui/button";
@@ -11,21 +10,28 @@ import {
   DrawerBody,
 } from "@heroui/drawer";
 import ProductWrapper from "./ProductWrapper";
-import { useProductStore } from "../_stores/productStore";
+import { useFormattedProducts } from "../_stores/productStore";
+import Search from "./Search";
+import TProduct from "../_types/product";
+import Sort from "./Sort";
 
 export default function Products() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const products = useProductStore((state) => state.products);
+  const formatedProducts = useFormattedProducts();
   const [selectedProduct, setSelectedProduct] = useState<TProduct | null>(null);
 
   return (
     <div className="flex justify-between flex-col-reverse md:flex-row gap-4">
       <div className="w-full space-y-4">
-        <div className="flex flex-wrap gap-1">
+        <div className="space-y-2">
+          <div className="flex w-full flex-wrap gap-2">
+            <Search />
+            <Sort />
+          </div>
           <Button color="primary" onPress={onOpen}>
             Add
           </Button>
-          <Drawer isOpen={isOpen} onOpenChange={onOpenChange}>
+          <Drawer backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange}>
             <DrawerContent>
               {(close) => (
                 <>
@@ -40,11 +46,11 @@ export default function Products() {
             </DrawerContent>
           </Drawer>
         </div>
-        {products.map((product) => (
+        {formatedProducts.map((product) => (
           <ProductWrapper
             key={product.id}
             product={product}
-            onPress={() => setSelectedProduct(product)}
+            onPress={() => setSelectedProduct(selectedProduct ? null : product)}
           />
         ))}
       </div>
