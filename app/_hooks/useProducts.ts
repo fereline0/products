@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TProduct } from "../_types/product";
+import TProduct from "../_types/product";
 import { fetchProducts } from "../_services/product";
 
 export default function useProducts() {

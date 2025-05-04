@@ -1,5 +1,5 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { TProduct } from "../_types/product";
+import TProduct from "../_types/product";
 import ProductForm from "./shared/ProductForm";
 
 type TProductFormWrapperProps = {
