@@ -15,7 +15,7 @@ import {
 import Search from "./Search";
 import Sort from "./Sort";
 import TSort from "../_types/sort";
-import ProductList from "./ProductsList";
+import ProductWrapper from "./ProductWrapper";
 
 type TProductsProps = {
   products: TProduct[];
@@ -28,6 +28,26 @@ export default function Products({ products }: TProductsProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortParam, setSortParam] = useState<TSort>("name");
   const [selectedProduct, setSelectedProduct] = useState<TProduct | null>(null);
+
+  const filteredProducts = productsCopy
+    .filter((product) => {
+      if (!searchQuery.trim()) return true;
+      const query = searchQuery.toLowerCase();
+      return (
+        product.name.toLowerCase().includes(query) ||
+        product.description?.toLowerCase().includes(query)
+      );
+    })
+    .sort((a, b) => {
+      if (sortParam === "name") {
+        return a.name.localeCompare(b.name);
+      } else if (sortParam === "recentlyAdded" && a.createdAt && b.createdAt) {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      }
+      return 0;
+    });
 
   const handleDelete = (id: number) => {
     setProductsCopy((prev) => prev.filter((product) => product.id !== id));
@@ -65,13 +85,16 @@ export default function Products({ products }: TProductsProps) {
             </DrawerContent>
           </Drawer>
         </div>
-        <ProductList
-          products={productsCopy}
-          sortParam={sortParam}
-          searchQuery={searchQuery}
-          onSelect={setSelectedProduct}
-          onDelete={handleDelete}
-        />
+        {filteredProducts.map((product) => (
+          <ProductWrapper
+            key={product.id}
+            product={product}
+            onPress={() =>
+              setSelectedProduct(selectedProduct == product ? null : product)
+            }
+            onDelete={() => handleDelete(product.id)}
+          />
+        ))}
       </div>
       <div className="max-w-full w-full md:max-w-96">
         <Card fullWidth>
